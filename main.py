@@ -6,16 +6,18 @@ from kb1364 import keyboard
 import kmkx.fast
 from kmkx.opt_overrides import umlaut
 
-from kmk.keys import KC
+from kmk.keys import KC, Key
 
 from kmk.modules.modtap import ModTap
 from kmk.modules.layers import Layers
-# from kmk.modules.modremap import ModRemap
+from kmkx.modules.modremap import ModRemap, ModRemapMeta
 from kmkx.helpers import strings2keys
+
+remap = ModRemap()
 
 keyboard.modules.append(ModTap())
 keyboard.modules.append(Layers())
-# keyboard.modules.append(ModRemap())
+keyboard.modules.append(remap)
 
 
 
@@ -43,9 +45,82 @@ MO_F   = KC.MO(3)
 Ö = umlaut(KC.O)
 Ü = umlaut(KC.U)
 
+'''
+ label Base  None    Shift   Opt       Shift-Opt
+ (     9     +shift  ,       w+shift   \ -shift
+ )     0     +shift  .       [         \
+ &     6     +shift  7       [+shift   None
+ $     4     +shift  5       2+shift   None
+ #     3     +shift  2       no ∆      None
+ !     1     +shift  /       no ∆      /
+'''
+
+lprn = Key(
+    code=9999,
+    has_modifiers=None,
+    meta=ModRemapMeta([
+        (lambda c,s,a,g: s and not a, KC['<']),
+        (lambda c,s,a,g: True, KC['(']),
+    ]),
+    on_press=remap.press,
+    on_release=remap.release
+)
+
+
+rprn = Key(
+    code=9999,
+    has_modifiers=None,
+    meta=ModRemapMeta([
+        (lambda c,s,a,g: s and not a, KC['>']),
+        (lambda c,s,a,g: True, KC[')']),
+    ]),
+    on_press=remap.press,
+    on_release=remap.release
+)
+
+
+caret = Key(
+    code=9999,
+    has_modifiers=None,
+    meta=ModRemapMeta([
+        (lambda c,s,a,g: s and a, KC.N7, {KC.LSFT,KC.RSFT}),
+        (lambda c,s,a,g: a, KC.N6, {KC.LSFT,KC.RSFT}),
+        (lambda c,s,a,g: s, KC['&']),
+        (lambda c,s,a,g: True, KC['^']),
+    ]),
+    on_press=remap.press,
+    on_release=remap.release
+)
+
+
+dollar = Key(
+    code=9999,
+    has_modifiers=None,
+    meta=ModRemapMeta([
+        (lambda c,s,a,g: a, KC['@']),
+        (lambda c,s,a,g: s, KC['%']),
+        (lambda c,s,a,g: True, KC['$']),
+    ]),
+    on_press=remap.press,
+    on_release=remap.release
+)
+
+
+slash = Key(
+    code=9999,
+    has_modifiers=None,
+    meta=ModRemapMeta([
+        (lambda c,s,a,g: not s and not a, KC['/']),
+        (lambda c,s,a,g: True, KC.N8),
+    ]),
+    on_press=remap.press,
+    on_release=remap.release
+)
+
+
 keyboard.keymap = [
     [   # Default Colemak Mod DH Layer
-        'XXXXXXX', LPRN,      RPRN,      CARET,     DOLLAR,    'XXXXXXX', KC.GRAVE,  HASH,      BANG,      SLASH,     KC.LBRC,    KC.RBRC,  KC.BSLASH,
+        'XXXXXXX', lprn,      rprn,      caret,     dollar,    'XXXXXXX', KC.GRAVE,  HASH,      BANG,      slash,     KC.LBRC,    KC.RBRC,  KC.BSLASH,
         'XXXXXXX', 'Q',       'W',       'F',       'P',       'B',       KC.TAB,    'J',       'L',       Ü,         'Y',        '-',      '=',
         CESC,      Ä,         'R',       'S',       'T',       'G',       KC.BSPC,   'M',       'N',       'E',       'I',        Ö,        KC.QUOTE,
         'LSFT',    'Z',       'X',       'C',       'D',       'V',       MO_NUM,    'K',       'H',       COMMA,     DOT,        'UP',     'RSFT',
