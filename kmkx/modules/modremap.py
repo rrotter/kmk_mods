@@ -8,22 +8,6 @@ ALT = {KC.LALT, KC.RALT}
 GUI = {KC.LGUI, KC.RGUI}
 
 
-# class RemapKey(Key):
-#     __getattr__
-
-# class KeyThingy:
-#
-#     def __init__(self, v):
-#         self.v = v
-#
-#     def __getattr__(self, name):
-#         print(f'generating {name}')
-#         return f'{name} is {self.v}'
-#
-#     def other():
-#         return 'nope'
-
-
 class ModRemapMeta:
     def __init__(self, overrides=None):
         self.override_map = []
