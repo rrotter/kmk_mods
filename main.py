@@ -122,7 +122,7 @@ lbrc = Key(
     code=9999,
     has_modifiers=None,
     meta=ModRemapMeta([
-        (lambda c,s,a,g: c and a, KC['{'], {KC.LALT,KC.RALT}),
+        (lambda c,s,a,g: g and a, KC['{'], {KC.LALT,KC.RALT}),
         (lambda c,s,a,g: True, KC['[']),
     ]),
     on_press=remap.press,
@@ -134,7 +134,7 @@ rbrc = Key(
     code=9999,
     has_modifiers=None,
     meta=ModRemapMeta([
-        (lambda c,s,a,g: c and a, KC['}'], {KC.LALT,KC.RALT}),
+        (lambda c,s,a,g: g and a, KC['}'], {KC.LALT,KC.RALT}),
         (lambda c,s,a,g: True, KC[']']),
     ]),
     on_press=remap.press,

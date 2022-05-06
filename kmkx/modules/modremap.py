@@ -40,7 +40,7 @@ class ModRemapMeta:
 class ModRemap(Module):
     def __init__(self):
         self.virtual_mods = set()
-        self.last_pressed = None
+        self.last_pressed = KC.NO
 
 
     def set_keycode(self, key, keyboard):
@@ -69,18 +69,47 @@ class ModRemap(Module):
     def process_key(self, keyboard, key, is_pressed, *args):
         # handle mod
         if isinstance(key, ModifierKey):
+            # track state of physical mod keys
             if is_pressed:
                 self.virtual_mods.add(key)
             else:
                 self.virtual_mods.discard(key)
 
+            # modify state for held ModRemap key
+            if isinstance(self.last_pressed.meta, ModRemapMeta):
+                keyboard.keys_pressed |= self.virtual_mods
+
+                if not is_pressed:
+                    keyboard.keys_pressed.discard(key)
+
+                if self.set_keycode(self.last_pressed, keyboard):
+                    # release it if it will produce erronious keypress
+                    self.release(self.last_pressed, keyboard)
+
+                # send report and block remaining handlers
+                keyboard._send_hid()
+                return
+
+        # clear any held modremap keys when we get another keypress
+        elif is_pressed:
+            self.release_all(keyboard)
+            self.last_pressed = key
+
         return key
+
+
+    def release_all(self, keyboard):
+
+        for key in keyboard.keys_pressed:
+            if isinstance(key.meta, ModRemapMeta):
+                keyboard.keys_pressed.discard(key)
+
+        keyboard.keys_pressed |= self.virtual_mods
 
 
     def press(self, key, keyboard, *args, **kwargs):
 
         self.set_keycode(key, keyboard)
-        self.last_pressed = key
 
         keyboard.hid_pending = True
 
@@ -89,13 +118,14 @@ class ModRemap(Module):
         return keyboard
 
 
-    def release(self, key, keyboard, KC, *args, **kwargs):
+    def release(self, key, keyboard, *args, **kwargs):
         
-        # self.set_keycode(key, keyboard)
-
         keyboard.hid_pending = True
 
         keyboard.keys_pressed.discard(key)
+        if self.last_pressed == key:
+            self.last_pressed = KC.NO
+
         keyboard.keys_pressed |= self.virtual_mods
 
         return keyboard
