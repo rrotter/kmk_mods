@@ -118,9 +118,33 @@ slash = Key(
 )
 
 
+lbrc = Key(
+    code=9999,
+    has_modifiers=None,
+    meta=ModRemapMeta([
+        (lambda c,s,a,g: c and a, KC['{'], {KC.LALT,KC.RALT}),
+        (lambda c,s,a,g: True, KC['[']),
+    ]),
+    on_press=remap.press,
+    on_release=remap.release
+)
+
+
+rbrc = Key(
+    code=9999,
+    has_modifiers=None,
+    meta=ModRemapMeta([
+        (lambda c,s,a,g: c and a, KC['}'], {KC.LALT,KC.RALT}),
+        (lambda c,s,a,g: True, KC[']']),
+    ]),
+    on_press=remap.press,
+    on_release=remap.release
+)
+
+
 keyboard.keymap = [
     [   # Default Colemak Mod DH Layer
-        'XXXXXXX', lprn,      rprn,      caret,     dollar,    'XXXXXXX', KC.GRAVE,  HASH,      BANG,      slash,     KC.LBRC,    KC.RBRC,  KC.BSLASH,
+        'XXXXXXX', lprn,      rprn,      caret,     dollar,    'XXXXXXX', KC.GRAVE,  HASH,      BANG,      slash,     lbrc,       rbrc,     KC.BSLASH,
         'XXXXXXX', 'Q',       'W',       'F',       'P',       'B',       KC.TAB,    'J',       'L',       Ü,         'Y',        '-',      '=',
         CESC,      Ä,         'R',       'S',       'T',       'G',       KC.BSPC,   'M',       'N',       'E',       'I',        Ö,        KC.QUOTE,
         'LSFT',    'Z',       'X',       'C',       'D',       'V',       MO_NUM,    'K',       'H',       COMMA,     DOT,        'UP',     'RSFT',
