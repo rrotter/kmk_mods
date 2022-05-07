@@ -59,7 +59,9 @@ lprn = Key(
     code=9999,
     has_modifiers=None,
     meta=ModRemapMeta([
-        (lambda c,s,a,g: s and not a, KC['<']),
+        (lambda c,s,a,g: s and a, KC.BSLASH, {KC.LSFT,KC.RSFT}),
+        (lambda c,s,a,g: s, KC['<']),
+        (lambda c,s,a,g: a, KC.LSFT(KC.W)),
         (lambda c,s,a,g: True, KC['(']),
     ]),
     on_press=remap.press,
@@ -71,7 +73,9 @@ rprn = Key(
     code=9999,
     has_modifiers=None,
     meta=ModRemapMeta([
-        (lambda c,s,a,g: s and not a, KC['>']),
+        (lambda c,s,a,g: s and a, KC.BSLASH),
+        (lambda c,s,a,g: s, KC['>']),
+        (lambda c,s,a,g: a, KC['[']),
         (lambda c,s,a,g: True, KC[')']),
     ]),
     on_press=remap.press,
@@ -97,9 +101,37 @@ dollar = Key(
     code=9999,
     has_modifiers=None,
     meta=ModRemapMeta([
+        (lambda c,s,a,g: s and a, KC.N5, {KC.LSFT,KC.RSFT}),
         (lambda c,s,a,g: a, KC['@']),
-        (lambda c,s,a,g: s, KC['%']),
+        (lambda c,s,a,g: s, KC.N5),
         (lambda c,s,a,g: True, KC['$']),
+    ]),
+    on_press=remap.press,
+    on_release=remap.release
+)
+
+
+hsh = Key(
+    code=9999,
+    has_modifiers=None,
+    meta=ModRemapMeta([
+        (lambda c,s,a,g: a, KC.N3, {KC.LSFT,KC.RSFT}),
+        (lambda c,s,a,g: s, KC.N2),
+        (lambda c,s,a,g: True, KC['#']),
+    ]),
+    on_press=remap.press,
+    on_release=remap.release
+)
+
+
+bang = Key(
+    code=9999,
+    has_modifiers=None,
+    meta=ModRemapMeta([
+        (lambda c,s,a,g: s and a, KC['/']),
+        (lambda c,s,a,g: s, KC['/']),
+        (lambda c,s,a,g: a, KC.N1),
+        (lambda c,s,a,g: True, KC['!']),
     ]),
     on_press=remap.press,
     on_release=remap.release
@@ -144,7 +176,7 @@ rbrc = Key(
 
 keyboard.keymap = [
     [   # Default Colemak Mod DH Layer
-        'XXXXXXX', lprn,      rprn,      caret,     dollar,    'XXXXXXX', KC.GRAVE,  HASH,      BANG,      slash,     lbrc,       rbrc,     KC.BSLASH,
+        'XXXXXXX', lprn,      rprn,      caret,     dollar,    'XXXXXXX', KC.GRAVE,  hsh,      bang,      slash,     lbrc,       rbrc,     KC.BSLASH,
         'XXXXXXX', 'Q',       'W',       'F',       'P',       'B',       KC.TAB,    'J',       'L',       Ü,         'Y',        '-',      '=',
         CESC,      Ä,         'R',       'S',       'T',       'G',       KC.BSPC,   'M',       'N',       'E',       'I',        Ö,        KC.QUOTE,
         'LSFT',    'Z',       'X',       'C',       'D',       'V',       MO_NUM,    'K',       'H',       COMMA,     DOT,        'UP',     'RSFT',
