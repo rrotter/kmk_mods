@@ -87,8 +87,8 @@ caret = Key(
     code=9999,
     has_modifiers=None,
     meta=ModRemapMeta([
-        (lambda c,s,a,g: s and a, KC.N7, {KC.LSFT,KC.RSFT}),
-        (lambda c,s,a,g: a, KC.N6, {KC.LSFT,KC.RSFT}),
+        (lambda c,s,a,g: s and a, KC.N6, {KC.LSFT,KC.RSFT}),
+        (lambda c,s,a,g: a, KC['{']),
         (lambda c,s,a,g: s, KC['&']),
         (lambda c,s,a,g: True, KC['^']),
     ]),
